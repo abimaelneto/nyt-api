@@ -1,70 +1,104 @@
 <script>
-import { RouterLink } from "vue-router";
+
 export default {
   data() {
     return {
-      people: [],
+      apiKey: 'OCuAzfRfKVr1HDAkN1lCOImvrRs8Rlwm',
+      sections: ['arts','automobiles','business','fashion','food','health','home','insider','magazine', 'movies','nyregion','obituaries','opinion','politics','realestate','science','sports','sundayreview','technology','theater','t-magazine','travel','upshot','us','world'],
+      articles: {},
       loading: false,
       next: null,
       previous: null,
+
     };
   },
+
+  created() {
+// para cada tema, buscar artigos
+    this.sections.forEach(section => {
+      this.getArticles(section);
+    });
+  }, 
+
   methods: {
-    getPeople(url) {
-      this.loading = true;
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          this.people = data.results;
-          //guardar as referências par as páginas anteriores
-          this.next = data.next;
-          this.previous = data.previous;
-          this.loading = false;
-        });
+    getArticles(section) {
+// fetch() para fazer a solicitação HTTP
+      fetch(`https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${this.apiKey}`)
+        .then(response => response.ok ? response.json() : Promise.reject(response))
+        .then(data => {
+          let firstFew = this.getFewArticles(data.results);
+          this.articles[section] = firstFew; // Substituído por atribuição direta
+          
+        })
+        .catch(err => {
+          console.log('Cannot display stories', err);
+        })
     },
+    getFewArticles(articles) {
+      return articles.slice(1, 10);
+    },
+    articlesOrgHTML(str) {
+      let temp = document.createElement('div');
+      temp.textContent = str;
+      return temp.innerHTML;
+    },
+
+
     handlePrevious() {
-      this.getPeople(this.previous);
+      this.getArticles(this.previous);
     },
     handleNext() {
-      this.getPeople(this.next);
+      this.getFewArticles(this.next);
     },
   },
   mounted() {
-    this.getPeople("https://swapi.dev/api/people/");
-  },
+    this.getArticles("https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${this.apiKey}");
+  }, 
 };
+
 </script>
 
-<template>
-  <main>
-    <p>Previous: {{ previous }}</p>
-    >
-    <p>Next: {{ next }}</p>
-    >
-    <h3 v-show="loading">Loading...</h3>
 
-    <table v-show="!loading">
-      <tr>
-        <th>Name</th>
-        <th>Gender</th>
-        <th>Height</th>
-      </tr>
-      <tr v-for="person in people" :key="person.name">
-        <td>
-          <RouterLink :to="`/people/${person.url.split('/')[5]}`">{{
-            person.name
-          }}</RouterLink>
-        </td>
-        <td>{{ person.name }}</td>
-        <td>{{ person.gender }}</td>
-        <td>{{ person.height }}</td>
-      </tr>
-    </table>
+<template>
+
+    <div id="app">
+      <div v-for="section in sections" :key="section">
+        <h2>{{ section }}</h2>
+        <article v-for="article in articles[section]" :key="article.title">
+          <h3>{{ articlesOrgHTML(article.title) }}</h3>
+          <p>Article: {{ articlesOrgHTML(article.byline) }}</p>
+          <p>Published date: {{ articlesOrgHTML(article.published_date) }}</p>
+          <p>Updated date: {{ articlesOrgHTML(article.updated_date) }}</p>
+          <p>Abstract: {{ articlesOrgHTML(article.abstract) }}</p>
+          <p>Subsection: {{ articlesOrgHTML(article.subsection) }}</p>
+        </article>
+
+      </div>
+    </div>
+    
     <div id="buttons-container">
       <button @click="handlePrevious">Previous</button>
       <button @click="handleNext">Next</button>
     </div>
-  </main>
-</template>
 
-<style></style>
+  </template>
+  
+  <style>
+  
+h2 {
+  color: rgb(14, 14, 199);
+}
+
+h3 {
+  color: green;
+  font-size: 18px;
+
+}
+
+@media print {
+  text {page-break-after: auto}
+}
+
+
+
+</style>

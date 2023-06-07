@@ -1,0 +1,18 @@
+@import './base.css';
+
+/*form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }*/
+  
+  body {
+    background-color: rgb(169, 169, 185);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  form > * {
+    margin: 1rem;
+    text-align: center;
+  }

@@ -5,11 +5,11 @@ import { RouterLink, RouterView } from "vue-router";
 <template>
   <header>
     <img
-      alt="Vue logo"
+      alt="nyt logo"
       class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
+      src="@/assets/The_New_York_Times_logo.png"
+      width="300"
+      height=""
     />
 
     <div class="wrapper">
@@ -32,12 +32,12 @@ header {
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  margin: 0 auto 3rem;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
+  width: 70%;
+  font-size: 14px;
   text-align: center;
   margin-top: 2rem;
 }
