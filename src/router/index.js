@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import AboutView from '../views/AboutView.vue'
+import ArticleView from '../views/ArticleView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,3 +23,4 @@ const router = createRouter({
 })
 
 export default router
+// exports.key = "HRb1SQE0WMuY63JclAJXBlxHUAPxAfDl";
