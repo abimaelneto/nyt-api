@@ -1,5 +1,18 @@
 <script>
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute } from "vue-router";
+
+export default {
+  components: {
+    RouterLink,
+    RouterView,
+  },
+  methods: {
+    isHomeView() {
+      const route = useRoute();
+      return route.path === "/";
+    },
+  },
+};
 </script>
 
 <template>
@@ -7,15 +20,15 @@ import { RouterLink, RouterView } from "vue-router";
     <img
       alt="nyt logo"
       class="logo"
-      src="@/assets/The_New_York_Times_logo.png"
-      width="300"
-      height=""
+      src="@/assets/fotos/The_New_York_Times_logo.png"
+      width="400"
+      height="60"
     />
 
     <div class="wrapper">
-      <nav>
+      <nav v-if="!isHomeView()">
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">Articles</RouterLink>
+        <RouterLink to="/articles">Articles</RouterLink>
         <RouterLink to="/books">Books</RouterLink>
       </nav>
     </div>
@@ -27,14 +40,13 @@ import { RouterLink, RouterView } from "vue-router";
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  max-width: 100vw;
 }
-
 .logo {
   display: block;
-  margin: 0 auto 3rem;
+  margin: 1rem auto 2rem;
 }
-
+/* 
 nav {
   width: 70%;
   font-size: 14px;
@@ -58,6 +70,6 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
-}
+} */
 
 </style>
