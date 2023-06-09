@@ -47,10 +47,37 @@ export default {
     <h3 v-show="loading">Carregando...</h3>
 
     <div v-for="(value, label) in bookDetail" :key="label">
-      <template v-show="!loading" v-if="label === 'coverImage'">
-        <img :src="value" />
-      </template>
-      <template v-else> {{ label }}: {{ value }} </template>
+      <div v-show="!loading" v-if="label === 'coverImage'">
+        <img class="cover" :src="value" />
+      </div>
+      <!-- mostra o link caso a capa não carregue -->
+      <div v-else>
+        <table>
+          <th>{{ label }}:</th>
+          <td>{{ value }}</td>
+        </table>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.cover {
+  display: block;
+  margin: 2rem auto 1rem;
+  height: 300px;
+}
+table {
+  display: grid;
+  place-items: center;
+}
+th {
+  font-size: larger;
+  font-weight: 700;
+  color: rgb(48, 54, 105);
+}
+td {
+  font-size: medium;
+  color: rgba(0, 0, 0, 0.89);
+}
+</style>
