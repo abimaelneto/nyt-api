@@ -1,4 +1,7 @@
+@import '../assets/article.css';
+
 /* color palette from <https://github.com/vuejs/theme> */
+
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -70,4 +73,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: Subway;
+  src: url('../assets/SubwayNovellaDEMO.ttf');
 }
