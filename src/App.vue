@@ -27,9 +27,9 @@ export default {
 
     <div class="wrapper">
       <nav v-if="!isHomeView()">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/articles">Articles</RouterLink>
-        <RouterLink to="/books">Books</RouterLink>
+        <RouterLink class="link" to="/">Home</RouterLink>
+        <RouterLink class="link" to="/articles">Articles</RouterLink>
+        <RouterLink class="link" to="/books">Books</RouterLink>
       </nav>
     </div>
   </header>
@@ -46,30 +46,31 @@ header {
   display: block;
   margin: 1rem auto 2rem;
 }
-/* 
+
 nav {
-  width: 70%;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60%;
+  margin-left: 20%;
+  margin-bottom: 2em;
+  padding: 10px;
+  gap: 40%;
+  border-style: groove;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+ .link,
+ a{
+  font-weight: 600;
+  font-size: 2ch;
+  color: rgba(0, 0, 0, 0.877);
+  text-decoration: none;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.link:hover {
+  background-color: rgba(143, 138, 113, 0.658);
+  padding: 3px;
+  border-radius: 2px;
 }
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-} */
-
 </style>
