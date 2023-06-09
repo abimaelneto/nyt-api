@@ -70,17 +70,46 @@ export default {
     <h3 v-show="loading">Carregando...</h3>
 
     <div v-for="(item, index) in list" :key="index">
+      <ul>
       <h3 v-show="!loading" @click="toggleRankings(item.Category)">
-        {{ item.Name }}
+      <li class="options">  {{ item.Name }} </li>
       </h3>
+    </ul>
       <ol v-if="rankings[item.Category] && item.ShowRankings">
-        <li v-for="(book, bookIndex) in rankings[item.Category]" :key="bookIndex">
+        <li class="list" v-for="(book, bookIndex) in rankings[item.Category]" :key="bookIndex">
           <RouterLink :to="`/detail/${book.Isbn}`" @click="getBookIsbn(book.Isbn)">
             {{ book.Title }} - {{ book.Author }}
           </RouterLink>
         </li>
       </ol>
-      <hr />
     </div>
   </div>
 </template>
+
+<style scoped>
+h3 {
+  display: inline;
+  cursor: pointer;
+
+  font-size: larger;
+  font-weight: bold;
+  color: rgb(75, 84, 161);
+}
+
+.options {
+margin-left: 10%;
+padding: 0.5%;
+
+}
+.list {
+  padding: 4px;
+margin-left: 14%;
+}
+
+a,
+li {
+text-decoration: none;
+}
+
+</style>
+
