@@ -2,11 +2,11 @@
 export default {
   data() {
     return {
-      apiKey: "0VVSCYm14TwtBMG0I7yPMvMEZEkxgWuN",
+      apiKey: "OCuAzfRfKVr1HDAkN1lCOImvrRs8Rlwm",
       sections: [
         "arts",
         "automobiles",
-        "business",
+        /* "business",
         "fashion",
         "food",
         "health",
@@ -28,7 +28,7 @@ export default {
         "travel",
         "upshot",
         "us",
-        "world",
+        "world", */
       ],
       articles: {},
       loading: false,
@@ -90,10 +90,15 @@ export default {
 </script>
 
 <template>
+  <div class="title">
+    <h1>Top Stories</h1>
+  </div>
   <div id="app">
+    <h2 v-show="loading">Carregando...</h2>
     <div v-for="section in sections" :key="section">
-      <h2 @click="toggleSection(section)">{{ section }}</h2>
-      <article
+      <h2 v-show="!loading" @click="toggleSection(section)">{{ section }}</h2>
+
+      <div
         v-show="this.articles[section]?.show"
         v-for="article in articles[section]"
         :key="article.title"
@@ -105,43 +110,34 @@ export default {
         <p>Abstract: {{ articlesOrgHTML(article.abstract) }}</p>
         <p>Subsection: {{ articlesOrgHTML(article.subsection) }}</p>
         <hr />
-      </article>
+    </div>
     </div>
   </div>
-
-  <!-- <div id="buttons-container">
-    <button @click="handlePrevious">Previous</button>
-    <button @click="handleNext">Next</button>
-  </div> -->
 </template>
-<style>
+<style scoped>
+.title {
+  margin-left: 6%;
+  font-family: Subway;
+  font-weight: bold;
+  font-size: 2rem;
+  color: rgb(31, 40, 121);
+}
 h2 {
-  color: rgb(14, 14, 199);
+  display: inline;
+  cursor: pointer;
+  margin-left: 6%;
+
+  color: rgb(75, 84, 161);
 }
+
 h3 {
-  color: green;
-  font-size: 18px;
+  display: inline;
+  margin-left: 10%;
+  font-size: larger;
+  color: rgb(62, 9, 208);
 }
-/* @media print {
-  text {
-    page-break-after: auto;
-  } */
-/* div {
-  float: botton;
-  padding: 15px;
-} */
-/* div {
-  position: relative;
-  left: 20px;
-} */
-/* div {
-  position: absolute;
-  bottom: 60;
-} */
-/* body {
-  padding: 1 4px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-} */
+p {
+  margin-left: 10%;
+  color: rgb(0, 0, 0);
+}
 </style>
