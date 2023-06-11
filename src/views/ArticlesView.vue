@@ -46,6 +46,7 @@ export default {
 
   methods: {
     getArticles(section) {
+      this.loading = true;
       // fetch() para fazer a solicitação HTTP
       fetch(
         `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${this.apiKey}`
@@ -57,6 +58,7 @@ export default {
           let firstFew = this.getFewArticles(data.results);
           this.articles[section] = firstFew; // Substituído por atribuição direta
           this.articles[section].show = false;
+          this.loading = false;
         })
         .catch((err) => {
           console.log("Cannot display stories", err);
@@ -94,10 +96,16 @@ export default {
     <h1>Top Stories</h1>
   </div>
   <div id="app">
-    <h2 v-show="loading">Carregando...</h2>
+    <h3 v-show="loading">Carregando...</h3>
     <div v-for="section in sections" :key="section">
-      <h2 v-show="!loading" @click="toggleSection(section)">{{ section }}</h2>
-
+      <h2
+        style="pointer-events: 1px"
+        v-show="!loading"
+        @click="toggleSection(section)"
+      >
+        {{ section }}
+      </h2>
+      <h3 v-show="!loading" @click="toggleSection(item.Section)"></h3>
       <div
         v-show="this.articles[section]?.show"
         v-for="article in articles[section]"
@@ -110,9 +118,10 @@ export default {
         <p>Abstract: {{ articlesOrgHTML(article.abstract) }}</p>
         <p>Subsection: {{ articlesOrgHTML(article.subsection) }}</p>
         <hr />
-    </div>
+      </div>
     </div>
   </div>
+  <!--  <div class="loading"></div> -->
 </template>
 <style scoped>
 .title {
@@ -125,19 +134,40 @@ export default {
 h2 {
   display: inline;
   cursor: pointer;
-  margin-left: 6%;
+  margin-left: 11%;
 
   color: rgb(75, 84, 161);
 }
 
 h3 {
   display: inline;
-  margin-left: 10%;
+  margin-left: 15%;
   font-size: larger;
   color: rgb(62, 9, 208);
 }
 p {
-  margin-left: 10%;
+  margin-left: 15%;
   color: rgb(0, 0, 0);
 }
+/* inserção de Entity*/
+h2:before {
+  content: " \2022  ";
+}
+/* .loading {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid black;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} */
+
+/* ::marker { 
+  color: black;
+} */
 </style>
