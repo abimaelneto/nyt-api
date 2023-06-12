@@ -4,36 +4,35 @@ export default {
     return {
       apiKey: "OCuAzfRfKVr1HDAkN1lCOImvrRs8Rlwm",
       sections: [
-        "arts",
-        "automobiles",
-        /* "business",
-        "fashion",
-        "food",
-        "health",
-        "home",
-        "insider",
-        "magazine",
-        "movies",
-        "nyregion",
-        "obituaries",
-        "opinion",
-        "politics",
-        "realestate",
-        "science",
-        "sports",
-        "sundayreview",
-        "technology",
-        "theater",
-        "t-magazine",
-        "travel",
-        "upshot",
-        "us",
-        "world", */
+        "Arts",
+        "Automobiles",
+        "Business",
+        "Fashion",
+        "Food",
+        "Health",
+        "Home",
+        "Insider",
+        "Magazine",
+        "Movies",
+        "Nyregion",
+        "Obituaries",
+        "Opinion",
+        "Politics",
+        "Realestate",
+        "Science",
+        "Sports",
+        "Sundayreview",
+        "Technology",
+        "Theater",
+        "T-magazine",
+        "Travel",
+        "Upshot",
+        "Us",
+        "World",
       ],
       articles: {},
       loading: false,
-      next: null,
-      previous: null,
+      searchKeyword: "",
     };
   },
 
@@ -75,18 +74,16 @@ export default {
       temp.textContent = str;
       return temp.innerHTML;
     },
-
-    handlePrevious() {
-      this.getArticles(this.previous);
-    },
-    handleNext() {
-      this.getFewArticles(this.next);
+    filteredArticles(section) {
+      const searchKeyword = this.searchKeyword.toLowerCase();
+      return this.articles[section]?.filter((article) => {
+        const title = article.title.toLowerCase();
+        return title.includes(searchKeyword);
+      });
     },
   },
   mounted() {
-    this.getArticles(
-      "https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${this.apiKey}"
-    );
+    this.getArticles();
   },
 };
 </script>
@@ -96,6 +93,7 @@ export default {
     <h1>Top Stories</h1>
   </div>
   <div id="app">
+    <input v-model="searchKeyword" type="text" placeholder="Search Articles" />
     <h3 v-show="loading">Carregando...</h3>
     <div v-for="section in sections" :key="section">
       <h2
@@ -108,7 +106,7 @@ export default {
       <h3 v-show="!loading" @click="toggleSection(item.Section)"></h3>
       <div
         v-show="this.articles[section]?.show"
-        v-for="article in articles[section]"
+        v-for="article in filteredArticles(section)"
         :key="article.title"
       >
         <h3>{{ articlesOrgHTML(article.title) }}</h3>
@@ -152,7 +150,17 @@ p {
 /* inserção de Entity*/
 h2:before {
   content: " \2022  ";
+  padding-right: 15px;
 }
+input {
+  margin-left: 20px;
+  height: 25px;
+  width: 250px;
+  background-color: rgb(194, 190, 190);
+  font-size: medium;
+  margin-bottom: 30px;
+}
+
 /* .loading {
   border: 16px solid #f3f3f3;
   border-top: 16px solid black;
