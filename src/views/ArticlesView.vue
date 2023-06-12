@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      apiKey: "OCuAzfRfKVr1HDAkN1lCOImvrRs8Rlwm",
+      apiKey: "TUQGXgTP3oCtvfzcQHAqLuYQ92Gj4HB7",
       sections: [
         "Arts",
         "Automobiles",
@@ -94,7 +94,7 @@ export default {
   </div>
   <div id="app">
     <input v-model="searchKeyword" type="text" placeholder="Search Articles" />
-    <h3 v-show="loading">Carregando...</h3>
+    <h3 v-show="loading">You are number 2 in the queue</h3>
     <div v-for="section in sections" :key="section">
       <h2
         style="pointer-events: 1px"
