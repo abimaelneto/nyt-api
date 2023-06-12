@@ -73,7 +73,7 @@ export default {
     <h1>Best Sellers</h1>
   </div>
   <div>
-    <h3 v-show="loading">Carregando...</h3>
+    <h3 v-show="loading">Our premium plan is faster...</h3>
 
     <div v-for="(item, index) in list" :key="index">
       <ul>

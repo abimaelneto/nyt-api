@@ -44,7 +44,7 @@ export default {
 
 <template>
   <div>
-    <h3 v-show="loading">Carregando...</h3>
+    <h3 class="load-message" v-show="loading">Let's hope it's worth the wait...</h3>
 
     <div v-for="(value, label) in bookDetail" :key="label">
       <div v-show="!loading" v-if="label === 'coverImage'">
@@ -79,5 +79,8 @@ th {
 td {
   font-size: medium;
   color: rgba(0, 0, 0, 0.89);
+}
+.load-message{
+  color: rgb(75, 84, 161);
 }
 </style>
