@@ -4,15 +4,15 @@ export default {
     return {
       loading: false, // Variável de estado para controlar o carregamento
       apiKey: "DfAI0teJCa28uw06owBfsF00xcyXoW7p",
-      list: [],
+      topics: [],
       rankings: {}, // Armazena os rankings de livros por categoria
       selectedBookIsbn: null, // Propriedade para armazenar o ISBN do livro selecionado
+      openedCategory: "",
     };
   },
   methods: {
     getTopics() {
       this.loading = true; // Define loading como true para exibir a mensagem de loading
-
       fetch(
         `https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=${this.apiKey}`
       )
@@ -23,15 +23,14 @@ export default {
             Name: lists.display_name,
             ShowRankings: false, // Controle de exibição
           }));
-          this.list = listTopics;
+
+          this.topics = listTopics;
+        })
+        .finally(() => {
           this.loading = false; // Para de exibir a mensagem quando a pagina está completamente carregada
         });
     },
     getRankings(category) {
-      if (this.rankings[category]) {
-        // Se já tiver os rankings, não precisa fazer a requisição novamente
-        return;
-      }
       fetch(
         `https://api.nytimes.com/svc/books/v3/lists/current/${category}.json?api-key=${this.apiKey}`
       )
@@ -43,23 +42,21 @@ export default {
             Rank: book.rank,
             Isbn: book.primary_isbn13,
           }));
-          this.rankings = {
-            ...this.rankings,
-            [category]: rankings,
-          };
+          this.rankings[category] = rankings;
         });
     },
-    toggleRankings(category) {
-      const item = this.list.find((item) => item.Category === category);
-      if (item) {
-        item.ShowRankings = !item.ShowRankings;
-        if (item.ShowRankings) {
-          this.getRankings(category);
-        }
-      }
+    openCategory(category) {
+      if (this.openedCategory == category) return;
+      this.openedCategory = category;
+      this.getRankings(category);
     },
     getBookIsbn(isbn) {
       this.selectedBookIsbn = isbn; // Define o ISBN do livro selecionado
+    },
+  },
+  computed: {
+    openedCategoryRanking() {
+      return this.rankings[this.openedCategory];
     },
   },
   mounted() {
@@ -75,20 +72,19 @@ export default {
   <div>
     <h3 v-show="loading">Our premium plan is faster...</h3>
 
-    <div v-for="(item, index) in list" :key="index">
-      <ul>
-        <h3 v-show="!loading" @click="toggleRankings(item.Category)">
-          <li class="options">{{ item.Name }}</li>
-        </h3>
-      </ul>
-      <ol v-if="rankings[item.Category] && item.ShowRankings">
+    <div v-for="(topic, index) in topics" :key="index">
+      <h3 v-show="!loading" @click="openCategory(topic.Category)">
+        <li class="options">{{ topic.Name }}</li>
+      </h3>
+
+      <ol v-if="openedCategory == topic.Category">
         <li
           class="list"
-          v-for="(book, bookIndex) in rankings[item.Category]"
+          v-for="(book, bookIndex) in openedCategoryRanking"
           :key="bookIndex"
         >
           <RouterLink
-            :to="`/detail/${book.Isbn}`"
+            :to="`/books/${book.Isbn}`"
             @click="getBookIsbn(book.Isbn)"
           >
             {{ book.Title }} - {{ book.Author }}
@@ -131,4 +127,3 @@ li {
   text-decoration: none;
 }
 </style>
-
