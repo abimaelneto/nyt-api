@@ -6,40 +6,41 @@ export default {
       sections: [
         "Arts",
         "Automobiles",
-        "Business",
-        "Fashion",
-        "Food",
-        "Health",
-        "Home",
-        "Insider",
-        "Magazine",
-        "Movies",
-        "Nyregion",
-        "Obituaries",
-        "Opinion",
-        "Politics",
-        "Realestate",
-        "Science",
-        "Sports",
-        "Sundayreview",
-        "Technology",
-        "Theater",
-        "T-magazine",
-        "Travel",
-        "Upshot",
-        "Us",
-        "World",
+        // "Business",
+        // "Fashion",
+        // "Food",
+        // "Health",
+        // "Home",
+        // "Insider",
+        // "Magazine",
+        // "Movies",
+        // "Nyregion",
+        // "Obituaries",
+        // "Opinion",
+        // "Politics",
+        // "Realestate",
+        // "Science",
+        // "Sports",
+        // "Sundayreview",
+        // "Technology",
+        // "Theater",
+        // "T-magazine",
+        // "Travel",
+        // "Upshot",
+        // "Us",
+        // "World",
       ],
       articles: {},
       loading: false,
       searchKeyword: "",
+      openSection: "",
     };
   },
 
-  created() {
+  mounted() {
     // para cada tema, buscar artigos
-    this.sections.forEach((section) => {
-      this.getArticles(section);
+    this.sections.forEach((s) => {
+      this.getArticles(s);
     });
   },
 
@@ -50,78 +51,97 @@ export default {
       fetch(
         `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${this.apiKey}`
       )
-        .then((response) =>
-          response.ok ? response.json() : Promise.reject(response)
-        )
+        .then((response) => response.json())
         .then((data) => {
-          let firstFew = this.getFewArticles(data.results);
-          this.articles[section] = firstFew; // Substituído por atribuição direta
-          this.articles[section].show = false;
-          this.loading = false;
+          let firstTen = this.getFirstTen(data.results);
+          this.articles[section] = {
+            items: firstTen,
+            show: false,
+          };
         })
         .catch((err) => {
           console.log("Cannot display stories", err);
         });
+      this.loading = false;
     },
     toggleSection(section) {
-      this.articles[section].show = !this.articles[section].show;
+      this.openSection = section;
     },
-    getFewArticles(articles) {
-      return articles.slice(1, 10);
-    },
-    articlesOrgHTML(str) {
-      let temp = document.createElement("div");
-      temp.textContent = str;
-      return temp.innerHTML;
-    },
-    filteredArticles(section) {
-      const searchKeyword = this.searchKeyword.toLowerCase();
-      return this.articles[section]?.filter((article) => {
-        const title = article.title.toLowerCase();
-        return title.includes(searchKeyword);
-      });
-    },
+
+    getFirstTen: (array) => array.slice(1, 10),
   },
-  mounted() {
-    this.getArticles();
+  computed: {
+    openArticles() {
+      if (!this.openSection) return [];
+      return this.articles[this.openSection].items;
+    },
+    filteredArticles() {
+      return this.openArticles?.filter((article) =>
+        article.title.toLowerCase().includes(this.searchKeyword.toLowerCase())
+      );
+    },
   },
 };
 </script>
 
 <template>
+  <button @click="test">test</button>
   <div class="title">
     <h1>Top Stories</h1>
   </div>
-  <div id="app">
+  <div>
     <input v-model="searchKeyword" type="text" placeholder="Search Articles" />
     <h3 v-show="loading">You are number 2 in the queue</h3>
-    <div v-for="section in sections" :key="section">
-      <h2
-        style="pointer-events: 1px"
-        v-show="!loading"
-        @click="toggleSection(section)"
-      >
-        {{ section }}
-      </h2>
-      <h3 v-show="!loading" @click="toggleSection(item.Section)"></h3>
-      <div
-        v-show="this.articles[section]?.show"
-        v-for="article in filteredArticles(section)"
-        :key="article.title"
-      >
-        <h3>{{ articlesOrgHTML(article.title) }}</h3>
-        <p>Article: {{ articlesOrgHTML(article.byline) }}</p>
-        <p>Published date: {{ articlesOrgHTML(article.published_date) }}</p>
-        <p>Updated date: {{ articlesOrgHTML(article.updated_date) }}</p>
-        <p>Abstract: {{ articlesOrgHTML(article.abstract) }}</p>
-        <p>Subsection: {{ articlesOrgHTML(article.subsection) }}</p>
-        <hr />
-      </div>
+    <div class="content">
+      <aside>
+        <h2
+          v-for="section in sections"
+          style="pointer-events: 1px"
+          v-show="!loading"
+          @click="toggleSection(section)"
+          :class="{ selected: section == openSection }"
+          :key="section"
+        >
+          {{ section }}
+        </h2>
+      </aside>
+      <article>
+        <div v-for="article in filteredArticles" :key="article.title">
+          <h3>{{ article.title }}</h3>
+          <p>Article: {{ article.byline }}</p>
+          <p>Published date: {{ article.published_date }}</p>
+          <p>Updated date: {{ article.updated_date }}</p>
+          <p>Abstract: {{ article.abstract }}</p>
+          <p>Subsection: {{ article.subsection }}</p>
+          <hr />
+        </div>
+      </article>
     </div>
   </div>
   <!--  <div class="loading"></div> -->
 </template>
 <style scoped>
+.selected {
+  color: green;
+}
+
+.content {
+  display: flex;
+  height: 60vh;
+}
+aside {
+  display: flex;
+  flex-direction: column;
+  background-color: lightgray;
+  width: 30%;
+}
+
+article {
+  width: 70%;
+  background-color: gray;
+  height: 100%;
+  overflow: auto;
+}
 .title {
   margin-left: 6%;
   font-family: Subway;
