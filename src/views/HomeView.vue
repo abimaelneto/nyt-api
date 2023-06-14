@@ -1,15 +1,25 @@
 <script>
+import HomeCard from "@/components/HomeCard.vue";
+import booksCover from "@/assets/fotos/books.jpg";
+import articlesCover from "@/assets/fotos/news.avif";
+
 export default {
+  components: {
+    HomeCard,
+  },
   data() {
     return {
-      isBooksHovered: false,
-      isNewsHovered: false,
+      hoveredCard: null,
+      booksCover,
+      articlesCover,
     };
   },
   methods: {
-    setBooksHovered(value) {
-      this.isBooksHovered = value;
-      this.isNewsHovered = !value;
+    hoverCard(target) {
+      this.hoveredCard = target;
+    },
+    test(v) {
+      console.log(v);
     },
   },
 };
@@ -17,28 +27,20 @@ export default {
 
 <template>
   <div class="image-container">
-    <router-link to="/articles" class="image-wrapper">
-      <img
-        class="news"
-        src="../assets/fotos/news.avif"
-        :class="{ active: isBooksHovered }"
-        @mouseover="setBooksHovered(false)"
-      />
-      <div class="text-overlay">
-        <span>Top Stories</span>
-      </div>
-    </router-link>
-    <router-link to="/books" class="image-wrapper">
-      <img
-        class="books"
-        src="../assets/fotos/books.jpg"
-        :class="{ active: isNewsHovered }"
-        @mouseover="setBooksHovered(true)"
-      />
-      <div class="text-overlay">
-        <span>Best Sellers</span>
-      </div>
-    </router-link>
+    <HomeCard
+      target="articles"
+      label="Top Stories"
+      :hoveredCard="hoveredCard"
+      :img="articlesCover"
+      :hover="hoverCard"
+    />
+    <HomeCard
+      target="books"
+      label="Best Sellers"
+      :hoveredCard="hoveredCard"
+      :img="booksCover"
+      :hover="hoverCard"
+    />
   </div>
 </template>
 
@@ -48,51 +50,5 @@ export default {
   height: 100vh;
   margin-left: 5%;
   overflow: hidden;
-}
-
-.image-wrapper {
-  position: relative;
-  overflow: hidden;
-}
-
-.books,
-.news {
-  height: 80%;
-  width: 90%;
-  object-fit: fill;
-  transition: transform 0.3s;
-}
-
-.text-overlay {
-  position: absolute;
-  text-align: center;
-
-  top: 40%;
-  left: 48%;
-  width: 10em;
-  padding-top: 2%;
-
-  background-color: rgb(233, 203, 168);
-  border-style: inset;
-
-  color: black;
-  font-family: Subway;
-  font-weight: bold;
-  font-size: 4rem;
-  
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.image-wrapper:hover {
-  transform: scale(1.1);
-  opacity: 1;
-}
-.image-wrapper:hover .text-overlay {
-  opacity: 1;
-}
-.image-wrapper .active {
-  opacity: 0.5;
 }
 </style>
